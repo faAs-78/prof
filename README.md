@@ -43,7 +43,7 @@ const contactInfo = {
   companyEnSub: "TRANSPORT & LOGISTICS COMPANY",
   tagline: "شرکت حمل و نقل بزرگ مقیاس",
 
-  contactName: "فایق رحیمی",
+  contactName: "رحیمی",
   contactNameEn: "Fayegh Rahimi",
   phoneDisplay: "0914 977 5687",
   phone: "+989149775687",
