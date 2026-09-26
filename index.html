@@ -132,14 +132,7 @@
     </div>
     <div class="footer__scan">
       <div class="footer__qr" aria-hidden="true">
-        <svg viewBox="0 0 29 29"><rect width="29" height="29" fill="#fff"/><g fill="#0c1912"><rect x="0" y="0" width="7" height="7"/><rect x="1.5" y="1.5" width="4" height="4" fill="#fff"/><rect x="2.5" y="2.5" width="2" height="2"/><rect x="22" y="0" width="7" height="7"/><rect x="23.5" y="1.5" width="4" height="4" fill="#fff"/><rect x="24.5" y="2.5" width="2" height="2"/><rect x="0" y="22" width="7" height="7"/><rect x="1.5" y="23.5" width="4" height="4" fill="#fff"/><rect x="2.5" y="24.5" width="2" height="2"/>
-        <rect x="9" y="1" width="1" height="1"/><rect x="11" y="1" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="16" y="1" width="1" height="1"/><rect x="18" y="2" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="12" y="4" width="1" height="1"/><rect x="15" y="4" width="1" height="1"/><rect x="18" y="4" width="1" height="1"/>
-        <rect x="9" y="9" width="2" height="2"/><rect x="13" y="9" width="1" height="2"/><rect x="16" y="9" width="2" height="1"/><rect x="19" y="10" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="11" y="12" width="2" height="1"/><rect x="15" y="12" width="1" height="2"/><rect x="18" y="13" width="2" height="1"/><rect x="9" y="15" width="1" height="2"/><rect x="12" y="15" width="1" height="1"/><rect x="14" y="16" width="2" height="1"/><rect x="17" y="15" width="1" height="2"/>
-        <rect x="9" y="18" width="1" height="1"/><rect x="11" y="19" width="1" height="1"/><rect x="13" y="18" width="1" height="1"/><rect x="16" y="18" width="1" height="1"/><rect x="18" y="19" width="1" height="1"/>
-        <rect x="22" y="9" width="1" height="1"/><rect x="24" y="9" width="1" height="1"/><rect x="26" y="10" width="1" height="1"/><rect x="22" y="12" width="2" height="1"/><rect x="25" y="12" width="1" height="2"/><rect x="22" y="15" width="1" height="2"/><rect x="24" y="16" width="2" height="1"/><rect x="27" y="15" width="1" height="1"/>
-        <rect x="22" y="18" width="1" height="1"/><rect x="24" y="19" width="1" height="1"/><rect x="26" y="18" width="1" height="2"/><rect x="9" y="22" width="1" height="1"/><rect x="11" y="24" width="1" height="1"/><rect x="13" y="22" width="1" height="1"/><rect x="16" y="24" width="1" height="1"/><rect x="18" y="22" width="1" height="1"/>
-        <rect x="9" y="26" width="2" height="1"/><rect x="13" y="27" width="1" height="1"/><rect x="16" y="26" width="1" height="2"/>
-        </g></svg>
+        <img src="assets/QrCode.png" alt="" loading="lazy">
       </div>
       <p class="footer__qr-label" id="txt-qr" dir="ltr">SCAN FOR MORE</p>
     </div>
@@ -149,6 +142,31 @@
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Save Contact: language picker (fills the vCard in Persian or English) -->
+<div class="lang-sheet" id="lang-sheet" hidden>
+  <div class="lang-sheet__backdrop" id="lang-sheet-backdrop"></div>
+  <div class="lang-sheet__panel" role="dialog" aria-modal="true" aria-labelledby="lang-sheet-title">
+    <span class="lang-sheet__grabber" aria-hidden="true"></span>
+    <p class="lang-sheet__title" id="lang-sheet-title">
+      <span class="fa">ذخیره مخاطب به کدام زبان؟</span>
+      <span class="en" dir="ltr">Save contact in which language?</span>
+    </p>
+    <div class="lang-sheet__options">
+      <button type="button" class="lang-option" data-lang="fa">
+        <span class="lang-option__name">فارسی</span>
+        <span class="lang-option__preview" dir="rtl">رحیمی · باربری اشنویه</span>
+      </button>
+      <button type="button" class="lang-option" data-lang="en">
+        <span class="lang-option__name" dir="ltr">English</span>
+        <span class="lang-option__preview" dir="ltr">Rahimi · Oshnavieh Freight Agency</span>
+      </button>
+    </div>
+    <button type="button" class="lang-sheet__cancel" id="lang-sheet-cancel">
+      <span class="fa">انصراف</span><span class="en" dir="ltr">Cancel</span>
+    </button>
+  </div>
+</div>
 
 <script src="js/app.js"></script>
 </body>
