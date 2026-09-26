@@ -1,13 +1,11 @@
-/* ==========================================================================
-   تمام اطلاعات را اینجا تغییر بده — بقیه صفحه از همینجا خوانده می‌شود.
-   ========================================================================== */
+
 const contactInfo = {
   companyFa: "بنیامین ترابر پارسیان",
   companyEn: "BENYAMIN TARABAR PARSIAN",
   companyEnSub: "TRANSPORT & LOGISTICS COMPANY",
   tagline: "شرکت حمل و نقل بزرگ مقیاس",
 
-  contactName: "فایق رحیمی",
+  contactName: "رحیمی باربری اشنویه",
   contactNameEn: "Fayegh Rahimi",
   phoneDisplay: "0914 977 5687",
   phone: "+989149775687",
