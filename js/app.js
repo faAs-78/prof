@@ -1,12 +1,21 @@
-
+/* ==========================================================================
+   تمام اطلاعات را اینجا تغییر بده — بقیه صفحه از همینجا خوانده می‌شود.
+   ========================================================================== */
 const contactInfo = {
   companyFa: "بنیامین ترابر پارسیان",
   companyEn: "BENYAMIN TARABAR PARSIAN",
   companyEnSub: "TRANSPORT & LOGISTICS COMPANY",
   tagline: "شرکت حمل و نقل بزرگ مقیاس",
 
-  contactName: "رحیمی باربری اشنویه",
-  contactNameEn: "Fayegh Rahimi",
+  // نام و «سازمان» که هنگام «ذخیره مخاطب» داخل vCard نوشته می‌شود — بسته به
+  // زبانی که کاربر هنگام ذخیره انتخاب می‌کند (فارسی یا انگلیسی). این‌ها با
+  // متنی که خودِ صفحه نشان می‌دهد (id="txt-contactname" در index.html) کاملاً
+  // جداست و تغییرشان روی نمایش صفحه اثری ندارد.
+  contactNameFa: "رحیمی",
+  contactOrgFa: "باربری اشنویه",
+  contactNameEn: "Rahimi",
+  contactOrgEn: "Oshnavieh Freight Agency", // ترجمه‌ی آزاد «باربری اشنویه» — در صورت تمایل عوضش کنید
+
   phoneDisplay: "0914 977 5687",
   phone: "+989149775687",
 
@@ -19,22 +28,25 @@ const contactInfo = {
 const [mapLat, mapLng] = contactInfo.mapCoords.split(",").map(v => v.trim());
 contactInfo.mapUrl = `https://nshn.ir/?lat=${mapLat}&lng=${mapLng}`;
 
-function buildVCard(d){
+function buildVCard(d, lang){
+  const name = lang === "en" ? d.contactNameEn : d.contactNameFa;
+  const org  = lang === "en" ? d.contactOrgEn  : d.contactOrgFa;
   return [
     "BEGIN:VCARD","VERSION:3.0",
-    `N:${d.contactName};;;;`,
-    `FN:${d.contactName} (${d.contactNameEn})`,
-    `ORG:${d.companyFa}`,
+    `N:${name};;;;`,
+    `FN:${name}`,
+    `ORG:${org}`,
     `TEL;TYPE=CELL:${d.phone}`,
     `EMAIL;TYPE=INTERNET:${d.email}`,
     "END:VCARD",
   ].join("\r\n");
 }
-function downloadVCard(d){
-  const blob = new Blob([buildVCard(d)], {type:"text/vcard;charset=utf-8"});
+function downloadVCard(d, lang){
+  const name = lang === "en" ? d.contactNameEn : d.contactNameFa;
+  const blob = new Blob([buildVCard(d, lang)], {type:"text/vcard;charset=utf-8"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url; a.download = `${d.contactName.replace(/\s+/g,"-")}.vcf`;
+  a.href = url; a.download = `${name.replace(/\s+/g,"-")}.vcf`;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url), 4000);
 }
@@ -52,14 +64,50 @@ document.getElementById("link-whatsapp").href = `https://wa.me/${contactInfo.wha
 document.getElementById("link-phone").href = `tel:${contactInfo.phone}`;
 
 const saveBtn = document.getElementById("btn-save");
-saveBtn.addEventListener("click", () => {
-  downloadVCard(contactInfo);
-  showToast("فایل مخاطب دانلود شد<small>Contact file downloaded</small>");
-  if (navigator.vibrate) navigator.vibrate(12);
-  setSaved(true);
-  clearTimeout(setSaved._t);
-  setSaved._t = setTimeout(() => setSaved(false), 2600);
-});
+
+/* Save Contact → ask which language the vCard should be written in, then
+   download it. The page's own bilingual identity is mirrored here: rather
+   than guessing from the phone's OS language (unreliable and silent), the
+   person picks explicitly in a small bottom sheet. */
+(function langSheetSetup(){
+  const sheet = document.getElementById("lang-sheet");
+  const backdrop = document.getElementById("lang-sheet-backdrop");
+  const cancelBtn = document.getElementById("lang-sheet-cancel");
+  const options = [...sheet.querySelectorAll(".lang-option")];
+  let lastFocused = null, closeTimer = null;
+
+  function onKeydown(e){
+    if (e.key === "Escape") close();
+  }
+  function open(){
+    lastFocused = document.activeElement;
+    clearTimeout(closeTimer);
+    sheet.hidden = false;
+    requestAnimationFrame(() => sheet.classList.add("is-open"));
+    document.addEventListener("keydown", onKeydown);
+    (options[0] || cancelBtn).focus();
+  }
+  function close(){
+    sheet.classList.remove("is-open");
+    document.removeEventListener("keydown", onKeydown);
+    closeTimer = setTimeout(() => { sheet.hidden = true; }, 320);
+    if (lastFocused) lastFocused.focus();
+  }
+  function pick(lang){
+    downloadVCard(contactInfo, lang);
+    close();
+    showToast("فایل مخاطب دانلود شد<small>Contact file downloaded</small>");
+    if (navigator.vibrate) navigator.vibrate(12);
+    setSaved(true);
+    clearTimeout(setSaved._t);
+    setSaved._t = setTimeout(() => setSaved(false), 2600);
+  }
+
+  saveBtn.addEventListener("click", open);
+  backdrop.addEventListener("click", close);
+  cancelBtn.addEventListener("click", close);
+  options.forEach(btn => btn.addEventListener("click", () => pick(btn.dataset.lang)));
+})();
 function setSaved(on){
   saveBtn.classList.toggle("is-done", on);
   saveBtn.querySelectorAll("[data-idle]").forEach(el => {
@@ -76,7 +124,7 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 
 /* Touch / click ripple on interactive elements */
 if (!reduceMotion){
-  document.querySelectorAll(".save-btn, .social-btn, .ring--sm").forEach(el => {
+  document.querySelectorAll(".save-btn, .social-btn, .ring--sm, .lang-option").forEach(el => {
     el.classList.add("ripple-host");
     el.addEventListener("pointerdown", e => {
       const r = el.getBoundingClientRect();
